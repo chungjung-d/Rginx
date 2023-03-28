@@ -22,7 +22,7 @@ async fn serve_req(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     if path.starts_with("/static") {
         let path = path.strip_prefix("/static").unwrap();
-        let path = PathBuf::from("static").join(path);
+        let path = PathBuf::from("build/static").join(path);
         let resp = match serve_static_file(path).await {
             Ok(content) => Response::new(content.into()),
             Err(_) => {
@@ -35,7 +35,7 @@ async fn serve_req(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         };
         Ok(resp)
     } else {
-        match serve_static_file(PathBuf::from("index.html")).await {
+        match serve_static_file(PathBuf::from("build/index.html")).await {
             Ok(content) => Ok(Response::new(content.into())),
             Err(_) => {
                 let body = Body::from("File not found");
